@@ -9,6 +9,10 @@ import Options from '../screens/Options';
 import Qrcode from '../screens/Qrcode';
 import Preview from '../screens/Preview';
 import PreviewStage from '../screens/PreviewStage';
+import Search from '../screens/Search';
+import Myproduct from '../screens/Myproduct';
+import Nextstage from "../screens/Nextstage"
+
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +41,9 @@ function Navigations() {
                 <Stack.Screen name="Qrcode" component={Qrcode} options={{
                     headerShown: false
                 }} />
+                <Stack.Screen name="Nextstage" component={Nextstage} options={{
+                    headerShown: false
+                }} />
                 <Stack.Screen name="Preview" component={Preview} options={{
                     headerShown: true
                 }} />
@@ -44,6 +51,12 @@ function Navigations() {
                     headerShown: true
                 }} />
                 <Stack.Screen name="Products" component={Products} options={{
+                    headerShown: true
+                }} />
+                <Stack.Screen name="Search" component={Search} options={{
+                    headerShown: true
+                }} />
+                <Stack.Screen name="Myproduct" component={Myproduct} options={{
                     headerShown: true
                 }} />
             </Stack.Navigator>}

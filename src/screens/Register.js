@@ -4,13 +4,13 @@ import axios from 'axios';
 import { BASE_URL } from '@env';
 import ProgressDialog from 'react-native-progress-dialog';
 import LinearGradient from 'react-native-linear-gradient';
-import CustomAlert from './Alert';
+import CustomAlert from '../components/Alert';
 
 const Register = ({ navigation }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [alertVisible, setAlertVisible] = useState(false); 
+    const [alertVisible, setAlertVisible] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
 
     const showAlert = (message) => {
@@ -27,12 +27,8 @@ const Register = ({ navigation }) => {
         setIsLoading(true);
         try {
             const response = await axios.post(`${BASE_URL}/register/`, {
-                users: [
-                    {
-                        username: username,
-                        password: password
-                    }
-                ]
+                username: username,
+                password: password
             });
 
             if (response.status === 200) {
@@ -43,6 +39,7 @@ const Register = ({ navigation }) => {
         }
         setIsLoading(false);
     };
+
 
     return (
         <View style={styles.container}>

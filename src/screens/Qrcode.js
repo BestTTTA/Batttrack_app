@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
@@ -6,62 +6,126 @@ import axios from 'axios';
 import { BASE_URL } from '@env';
 import moment from 'moment';
 
+
 const Qrcode = ({ route, navigation }) => {
-    const currentDateTimeThailand = moment().format('YYYY-MM-DD HH:mm:ss');
+    const currentDateTimeThailand = moment().format('DD-MM-YYYY HH:mm:ss');
     const [torchEnabled, setTorchEnabled] = useState(false);
-    const [stage, setStage] = useState(null);
-    const [productId, setProductId] = useState(null);
+    const { user_id, username } = route.params;
+
+    
+    // const [holdingResponse, setHoldingresponse] = useState("")
+   
+
+    // const fetchDataHolding = useCallback(async (product_id) => {
+    //     try {
+    //         const response = await axios.get(`${BASE_URL}/get_product_id/${product_id}`);
+    //         setHoldingresponse(response.data.holding_time)
+    //         console.log(response.data.holding_time)
+    //     } catch (error) {
+    //     }
+    // }, []);
+
 
     const onSuccess = async (e) => {
         const scannedProductId = e.data;
-        setProductId(scannedProductId);
-
         try {
-            const apiUrl = `${BASE_URL}/get_product/${scannedProductId}/stage_work`;
-            const res = await axios.get(apiUrl);
-            setStage(res.data.stage_work);
+            await Create_product(scannedProductId);
+            // await Getproductid(scannedProductId);
+            // await fetchData(scannedProductId);
         } catch (error) {
-        }
-
-        if (productId && stage !== undefined) {
-            navigation.navigate("Preview", { ProductId: productId, time: currentDateTimeThailand });
-        } else {
-            addWorker(productId, stage);
-        } const productToAdd = [{
-            product_id: scannedProductId,
-            start_work: currentDateTimeThailand,
-            end_work: "No data",
-            stage_work: 1,
-        }];
-        addProduct(productToAdd);
-    };
-
-    const addProduct = async (products) => {
-        try {
-            const url = `${BASE_URL}/add_product/`;
-            await axios.post(url, { list_product: products });
-        } catch (error) {
+            console.log("error scan", error)
         }
     };
 
-    useEffect(() => {
-        if (stage !== null && productId !== null) {
-            addWorker(productId, stage);
-        }
-    }, [stage, productId]);
 
-    const addWorker = async (productId, stage) => {
-        const { user_id, username } = route.params;
+    const Create_product = async (product_id) => {
         try {
-            await axios.put(`${BASE_URL}/update_worker/${productId}/worker_model`, {
-                worker_id: user_id,
-                user_name: username,
-                stage_work: stage,
-                start_work: currentDateTimeThailand
+            const response = await axios.post(`${BASE_URL}/create_product`, {
+                product_id: product_id,
+                start_time: currentDateTimeThailand,
+                end_time: "...",
+                holding_time: "stop",
+                current_stage: 1
             });
+            if (response.status === 200) {
+                navigation.navigate("Preview", {
+                    user_id: user_id,
+                    username: username,
+                    product_id: product_id,
+                    render: 1
+                });
+            }
         } catch (error) {
+            navigation.navigate("Preview", {
+                user_id: user_id,
+                username: username,
+                product_id: product_id,
+                render: 1
+            });
         }
     };
+
+
+    // const fetchData = async (product_id) => {
+    //     try {
+    //         const responseFetchData = await axios.get(`${BASE_URL}/get_product_id/${product_id}`);
+    //         if (responseFetchData.status === 200) {
+    //             await Getproductid(product_id, responseFetchData.data.current_stage);
+    //         }
+    //     } catch (error) {
+    //         console.log("Error from fetchData", product_id, error)
+    //     }
+    // };
+
+
+    // const Getproductid = async (product_id, stage) => {
+    //     try {
+    //         const response = await axios.get(`${BASE_URL}/get_product_id/${product_id}`);
+    //         if (response.data.end_time === "..." && response.data.holding_time === "stop") {
+    //             // await Addemployee(product_id, stage);
+    //         } else {
+                // navigation.navigate("Preview", {
+                //     user_id: user_id,
+                //     username: username,
+                //     product_id: product_id,
+                //     render: 1
+                // });
+    //         }
+    //     } catch (error) {
+    //         console.log("Error from Getproductid:", error);
+    //     }
+    // };
+    
+
+
+    // const Addemployee = async (product_id, stage) => {
+    //     try {
+    //         const response = await axios.put(`${BASE_URL}/add_employee/${product_id}`, {
+    //             user_id: user_id,
+    //             name: username,
+    //             start_time: currentDateTimeThailand,
+    //             end_time: "...",
+    //             holding_time: "stop",
+    //             current_stage: stage
+    //         });
+    //         if (response.status === 200) {
+    //             navigation.navigate("Preview", {
+    //                 user_id: user_id,
+    //                 username: username,
+    //                 product_id: product_id,
+    //                 render: 1
+    //             })
+    //         }
+    //     } catch (error) {
+    //         navigation.navigate("Preview", {
+    //             user_id: user_id,
+    //             username: username,
+    //             product_id: product_id,
+    //             render: 1
+    //         })
+    //     }
+    // };
+
 
     const toggleTorch = () => {
         setTorchEnabled(!torchEnabled);
@@ -71,7 +135,7 @@ const Qrcode = ({ route, navigation }) => {
         <View style={styles.centerText}>
             <QRCodeScanner
                 reactivate={true}
-                reactivateTimeout={1000}
+                reactivateTimeout={3000}
                 onRead={onSuccess}
                 flashMode={torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off}
                 topContent={
