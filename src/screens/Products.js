@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import ProgressDialog from 'react-native-progress-dialog';
 import hoookFetchAllProducts from '../hooks/hoookFetchAllProducts';
-import StyleProducts from '../hooks/hoookFetchAllProducts';
+import StyleProducts from '../styles/Product';
 
 const AllProduct = () => {
     const { products, isLoading } = hoookFetchAllProducts();
@@ -25,6 +25,7 @@ const AllProduct = () => {
                                     <Text style={styles.text}>Username: {worker.name}</Text>
                                     <Text style={styles.text}>Stage Work: {worker.current_stage}</Text>
                                     <Text style={styles.text}>Start Work: {worker.start_time}</Text>
+                                    <Text style={styles.text}>End Work: {worker.end_time}</Text>
                                 </View>
                             ))}
                         </View>

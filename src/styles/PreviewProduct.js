@@ -66,6 +66,11 @@ export default function PreviewProduct() {
             height: 40,
             margin: 5,
         },
+        ButtonAddemp: {
+            alignItems: 'center',
+            height: 40,
+            margin: 5,
+        },
         containButtonregister: {
             width: '50%',
             alignItems: 'center',
@@ -86,9 +91,7 @@ export default function PreviewProduct() {
             width: '50%',
             alignItems: 'center',
             justifyContent: 'center',
-            borderColor: '#7A7A7A',
             backgroundColor: 'white',
-            borderWidth: 2,
             borderRadius: 30,
             height: 40,
             shadowColor: 'rgba(0, 0, 0, 0.8)',

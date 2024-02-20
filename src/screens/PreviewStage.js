@@ -3,7 +3,7 @@ import ProgressDialog from 'react-native-progress-dialog';
 
 const PreviewStage = ({ route }) => {
 
-    const { stage,endtime } = route.params;
+    const { stage, endtime } = route.params;
 
     return (
         <ScrollView style={{ flex: 1, backgroundColor: 'white', padding: 20 }}>
@@ -16,7 +16,7 @@ const PreviewStage = ({ route }) => {
                                     borderRadius: 50,
                                     borderWidth: 3,
                                     borderColor: endtime !== "..." ? '#D3D3D3' : (index + 1 === stage ? '#3CC969' : '#EBEDEE'),
-                                    width:  endtime !== "..." ? 60 : (index + 1 === stage ? 70 : 60),
+                                    width: endtime !== "..." ? 60 : (index + 1 === stage ? 70 : 60),
                                     height: endtime !== "..." ? 60 : (index + 1 === stage ? 70 : 60),
                                     alignItems: 'center',
                                     justifyContent: 'center',

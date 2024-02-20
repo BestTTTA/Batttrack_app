@@ -6,6 +6,7 @@ import CustomAlert from '../components/Alert';
 import hookLogin from '../hooks/hookLogin';
 import StyleLogin from '../styles/Login'
 
+
 const Login = ({ navigation }) => {
   const { username, setUsername, password, setPassword, isLoading, Login, alertVisible, alertMessage, hideAlert } = hookLogin({ navigation });
   const { styles } = StyleLogin();
@@ -41,7 +42,7 @@ const Login = ({ navigation }) => {
           <Text style={styles.customButtonTextRegister}>REGISTER</Text>
         </TouchableOpacity>
       </View>
-      <CustomAlert visible={alertVisible} message={alertMessage} onClose={hideAlert} />
+      <CustomAlert visible={alertVisible} message={alertMessage} onClose={hideAlert}/>
     </View>
   );
 };

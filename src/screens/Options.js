@@ -3,10 +3,10 @@ import React from 'react'
 import Stylesoptions from '../styles/Options'
 
 const Options = ({ route, navigation }) => {
-
+   
     const { user_id, username } = route.params;
     const { styles } = Stylesoptions();
-    
+
     return (
         <View style={styles.container}>
             <View style={styles.containerlogo}>
