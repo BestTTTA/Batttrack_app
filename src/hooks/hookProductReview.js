@@ -11,10 +11,9 @@ const hookProductReview = (product_id, user_id) => {
     const [endtime, setEndtime] = useState("");
     const [holdingResponse, setHoldingResponse] = useState("");
     const currentDateTimeThailand = moment().format('DD-MM-YYYY HH:mm:ss');
-    
+
 
     const fetchData = useCallback(async () => {
-        // setIsLoading(true);
         try {
             const response = await axios.get(`${BASE_URL}/get_product_id/${product_id}`);
             setProduct(response.data);
@@ -22,18 +21,18 @@ const hookProductReview = (product_id, user_id) => {
             setEndtime(response.data.end_time);
             setHoldingResponse(response.data.holding_time);
             setIsHolding(response.data.holding_time === "holding");
+            console.log("fetchData:", response)
         } catch (error) {
-            console.error("Failed to fetch data:", error);
-        } finally {
-            // setIsLoading(false);
+            console.log('error from fetch data preview:', error)
         }
     }, [product_id]);
+
 
     useEffect(() => {
         fetchData();
         const intervalId = setInterval(() => {
             fetchData();
-        }, 1000);
+        }, 5000);
         return () => clearInterval(intervalId);
     }, [fetchData]);
 
@@ -93,18 +92,18 @@ const hookProductReview = (product_id, user_id) => {
         }
     };
 
-    return {
-        product,
-        isLoading,
-        stage,
-        endtime,
-        isHolding,
-        holdingResponse,        
-        endStage,
-        endStageEmployee,
-        handlePress,
-        Endstageemp
-    };
+return {
+    product,
+    isLoading,
+    stage,
+    endtime,
+    isHolding,
+    holdingResponse,
+    endStage,
+    endStageEmployee,
+    handlePress,
+    Endstageemp
+};
 };
 
 export default hookProductReview;

@@ -30,7 +30,7 @@ const hookLogin = ({ navigation }) => {
                 });
             }
         } catch (error) {
-            showAlert("Invalid login");
+            showAlert("เข้าสู่ระบบผิดพลาด");
         }
         setIsLoading(false);
     };

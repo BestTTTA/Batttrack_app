@@ -14,10 +14,10 @@ const CustomAlert2Way = ({ visible, message, onClose, onContinue, onCancel }) =>
                     <Text style={styles.alertText}>{message}</Text>
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity onPress={onCancel} style={styles.cancelButton}>
-                            <Text style={styles.buttonTextcancle}>Cancel</Text>
+                            <Text style={styles.buttonTextcancle}>ยกเลิก</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={onContinue} style={styles.continueButton}>
-                            <Text style={styles.buttonText}>Continue</Text>
+                            <Text style={styles.buttonText}>ดำเนินการต่อ</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

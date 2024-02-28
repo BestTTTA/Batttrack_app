@@ -20,7 +20,7 @@ const hookSearch = () => {
 
     const fetchData = async () => {
         if (!search.trim()) {
-            showAlert("Please enter a valid product ID");
+            showAlert("โปรดใส่โปรดักไอดีให้ถูกต้อง");
             return;
         }
         setIsLoading(true);
@@ -28,7 +28,7 @@ const hookSearch = () => {
             const response = await axios.get(`${BASE_URL}/get_product_id/${search}`);
             setProducts(response.data);
         } catch (error) {
-            showAlert("Not found product");
+            showAlert("ไม่พบโปรดัก");
         }
         setIsLoading(false);
     };

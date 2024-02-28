@@ -3,7 +3,7 @@ import React from 'react'
 import Stylesoptions from '../styles/Options'
 
 const Options = ({ route, navigation }) => {
-   
+
     const { user_id, username } = route.params;
     const { styles } = Stylesoptions();
 
@@ -13,7 +13,7 @@ const Options = ({ route, navigation }) => {
             </View>
             <View style={styles.containoptions}>
                 <View style={styles.optionsname}>
-                    <Text style={{ color: "gray", fontWeight: 'bold' }}>Options</Text>
+                    <Text style={{ color: "gray", fontWeight: 'bold' }}>ทางเลือก</Text>
                 </View>
                 <TouchableOpacity style={styles.optionsall} onPress={() => navigation.navigate("Qrcode", {
                     user_id,
@@ -24,7 +24,7 @@ const Options = ({ route, navigation }) => {
                             source={require('../../assets/qr-code.png')}
                             style={{ width: 40, height: 40, margin: 20, }}
                         />
-                        <Text style={{ color: "black", fontWeight: 'bold', fontSize: 15 }}>Check Stage</Text>
+                        <Text style={{ color: "black", fontWeight: 'bold', fontSize: 15 }}>ตรวจสอบโปรดัก</Text>
                     </View>
                     <Image
                         source={require('../../assets/right-arrow.png')}
@@ -39,7 +39,7 @@ const Options = ({ route, navigation }) => {
                                     source={require('../../assets/product.png')}
                                     style={{ width: 40, height: 40, margin: 20 }}
                                 />
-                                <Text style={{ color: "black", fontWeight: 'bold', fontSize: 15 }} >Products</Text>
+                                <Text style={{ color: "black", fontWeight: 'bold', fontSize: 15 }} >โปรดัก</Text>
                             </View>
                             <Image
                                 source={require('../../assets/right-arrow.png')}
@@ -52,7 +52,7 @@ const Options = ({ route, navigation }) => {
                                     source={require('../../assets/magnifier.png')}
                                     style={{ width: 40, height: 40, margin: 20 }}
                                 />
-                                <Text style={{ color: "black", fontWeight: 'bold', fontSize: 15 }} >Search Product</Text>
+                                <Text style={{ color: "black", fontWeight: 'bold', fontSize: 15 }} >ค้นหาโปรดัก</Text>
                             </View>
                             <Image
                                 source={require('../../assets/right-arrow.png')}
@@ -69,7 +69,7 @@ const Options = ({ route, navigation }) => {
                                 source={require('../../assets/magnifier.png')}
                                 style={{ width: 40, height: 40, margin: 20 }}
                             />
-                            <Text style={{ color: "black", fontWeight: 'bold', fontSize: 15 }} >My Product</Text>
+                            <Text style={{ color: "black", fontWeight: 'bold', fontSize: 15 }} >งานของฉัน</Text>
                         </View>
                         <Image
                             source={require('../../assets/right-arrow.png')}
@@ -85,7 +85,7 @@ const Options = ({ route, navigation }) => {
                         source={require('../../assets/logout.png')}
                         style={{ width: 40, height: 40, marginRight: 15 }}
                     />
-                    <Text style={{ color: "red", fontWeight: 'bold', fontSize: 15 }}>LOGOUT</Text>
+                    <Text style={{ color: "red", fontWeight: 'bold', fontSize: 15 }}>ออกจากระบบ</Text>
                 </View>
             </TouchableOpacity>
 

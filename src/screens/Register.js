@@ -23,7 +23,7 @@ const Register = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            {isLoading && <ProgressDialog visible={isLoading} loaderColor={"orange"} label={'Please wait'} />}
+            {isLoading && <ProgressDialog visible={isLoading} loaderColor={"orange"} label={'โปรดรอ'} />}
             <View style={styles.containerlogo}>
                 <Image
                     source={require('../../assets/logologin.png')}
@@ -33,14 +33,14 @@ const Register = ({ navigation }) => {
             <View style={styles.containertextfield}>
                 <TextInput
                     style={styles.input}
-                    placeholder="Username"
+                    placeholder="ชื่อ"
                     placeholderTextColor="gray"
                     onChangeText={setUsername}
                     value={username}
                 />
                 <TextInput
                     style={styles.input}
-                    placeholder="Password"
+                    placeholder="รหัสผ่าน"
                     placeholderTextColor="gray"
                     onChangeText={setPassword}
                     value={password}
@@ -53,7 +53,7 @@ const Register = ({ navigation }) => {
                         colors={['#FF8600', '#FF7600', '#FF6600']}
                         style={styles.customButton}
                     >
-                        <Text style={styles.customButtonText}>Register</Text>
+                        <Text style={styles.customButtonText}>สมัครสมาชิก</Text>
                     </LinearGradient>
                 </TouchableOpacity>
             </View>

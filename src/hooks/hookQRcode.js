@@ -25,7 +25,7 @@ export default hookQRcode = (navigation, user_id, username) => {
 
     const onSuccess = async (e) => {
         const scannedProductId = e.data;
-            showAlert("Do you want to continue?")
+            showAlert("คุณต้องการดำเนินการต่อใช่หรือไม่?")
             setProductid(scannedProductId)
     };
 
@@ -47,6 +47,7 @@ export default hookQRcode = (navigation, user_id, username) => {
                 });
             }
         } catch (error) {
+            console.log("error create product:", error)
             navigation.navigate("Preview", {
                 user_id: user_id,
                 username: username,

@@ -29,7 +29,7 @@ const hookRegister = (navigation) => {
                 navigation.navigate('Login');
             }
         } catch (error) {
-            showAlert("User or Password is already exist");
+            showAlert("ชื่อนี้มีการใช้งานอยู่แล้ว");
         }
         setIsLoading(false);
     };
