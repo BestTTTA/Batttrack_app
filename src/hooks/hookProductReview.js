@@ -1,109 +1,34 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { BASE_URL } from '@env';
 import moment from 'moment';
-
-const hookProductReview = (product_id, user_id) => {
-    const [product, setProduct] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isHolding, setIsHolding] = useState(false);
-    const [stage, setStage] = useState(0);
-    const [endtime, setEndtime] = useState("");
-    const [holdingResponse, setHoldingResponse] = useState("");
-    const currentDateTimeThailand = moment().format('DD-MM-YYYY HH:mm:ss');
+import { BASE_URL } from '@env';
 
 
-    const fetchData = useCallback(async () => {
+
+
+const hookProductReview = () => {
+    const [responsePreivew, setResponsepreview] = useState("")
+    // const currentDateTimeThailand = moment().format('DD-MM-YYYY HH:mm:ss');
+
+    const [loading, setLoding] = useState(false)
+    const showPreivew = async (product_id) => {
+        setLoding(true)
         try {
-            const response = await axios.get(`${BASE_URL}/get_product_id/${product_id}`);
-            setProduct(response.data);
-            setStage(response.data.current_stage);
-            setEndtime(response.data.end_time);
-            setHoldingResponse(response.data.holding_time);
-            setIsHolding(response.data.holding_time === "holding");
-            console.log("fetchData:", response)
+            const response = await axios.get(`${BASE_URL}/step_lto/${product_id}`)
+            setResponsepreview(response.data)
         } catch (error) {
-            console.log('error from fetch data preview:', error)
+            console.log("showPreivew Error", error)
         }
-    }, [product_id]);
+        setLoding(false)
+    }
 
-
-    useEffect(() => {
-        fetchData();
-        const intervalId = setInterval(() => {
-            fetchData();
-        }, 5000);
-        return () => clearInterval(intervalId);
-    }, [fetchData]);
-
-
-    const endStage = async () => {
-        setIsLoading(true);
-        try {
-            await axios.put(`${BASE_URL}/${product_id}/end_time`, {
-                end_time: currentDateTimeThailand
-            });
-            await fetchData();
-        } catch (error) {
-
-        } finally {
-            setIsLoading(false);
-        }
+    return {
+        responsePreivew,
+        showPreivew,
+        loading
     };
 
-    const endStageEmployee = async () => {
-        setIsLoading(true);
-        try {
-            await axios.put(`${BASE_URL}/${product_id}/employee_end_time`, {
-                user_id: user_id,
-                end_time: currentDateTimeThailand
-            });
-            await fetchData();
-        } catch (error) {
-
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handlePress = async () => {
-        setIsLoading(true);
-        try {
-            await axios.put(`${BASE_URL}/${product_id}/holding_time`, {
-                holding_time: isHolding ? "stop" : "holding"
-            });
-            await fetchData();
-        } catch (error) {
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const Endstageemp = async () => {
-        setIsLoading(true);
-        try {
-            await axios.put(`${BASE_URL}/${product_id}/employee_end_time`, {
-                user_id: user_id,
-                end_time: currentDateTimeThailand
-            });
-        } catch (error) {
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-return {
-    product,
-    isLoading,
-    stage,
-    endtime,
-    isHolding,
-    holdingResponse,
-    endStage,
-    endStageEmployee,
-    handlePress,
-    Endstageemp
 };
-};
+
 
 export default hookProductReview;

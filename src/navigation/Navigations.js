@@ -27,39 +27,40 @@ function Navigations() {
 
     return (
         <NavigationContainer>
-            {isLoading ? <SplashScreen /> : <Stack.Navigator
-                screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="Login" component={Login} options={{
-                    headerShown: false
-                }} />
-                <Stack.Screen name="Register" component={Register} options={{
-                    headerShown: false
-                }} />
-                <Stack.Screen name="Options" component={Options} options={{
-                    headerShown: false
-                }} />
-                <Stack.Screen name="Qrcode" component={Qrcode} options={{
-                    headerShown: false
-                }} />
-                <Stack.Screen name="Nextstage" component={Nextstage} options={{
-                    headerShown: false
-                }} />
-                <Stack.Screen name="Preview" component={Preview} options={{
-                    headerShown: true
-                }} />
-                <Stack.Screen name="PreviewStage" component={PreviewStage} options={{
-                    headerShown: true
-                }} />
-                <Stack.Screen name="Products" component={Products} options={{
-                    headerShown: true
-                }} />
-                <Stack.Screen name="Search" component={Search} options={{
-                    headerShown: true
-                }} />
-                <Stack.Screen name="Myproduct" component={Myproduct} options={{
-                    headerShown: true
-                }} />
-            </Stack.Navigator>}
+            {isLoading ? <SplashScreen /> :
+                <Stack.Navigator
+                    screenOptions={{ headerShown: false }}>
+                    <Stack.Screen name="Login" component={Login} options={{
+                        headerShown: false
+                    }} />
+                    <Stack.Screen name="Register" component={Register} options={{
+                        headerShown: false
+                    }} />
+                    <Stack.Screen name="Options" component={Options} options={{
+                        headerShown: false
+                    }} />
+                    <Stack.Screen name="Qrcode" component={Qrcode} options={{
+                        headerShown: false
+                    }} />
+                    <Stack.Screen name="Nextstage" component={Nextstage} options={{
+                        headerShown: false
+                    }} />
+                    <Stack.Screen name="Preview" component={Preview} options={{
+                        headerShown: true
+                    }} />
+                    <Stack.Screen name="PreviewStage" component={PreviewStage} options={{
+                        headerShown: true
+                    }} />
+                    <Stack.Screen name="Products" component={Products} options={{
+                        headerShown: true
+                    }} />
+                    <Stack.Screen name="Search" component={Search} options={{
+                        headerShown: true
+                    }} />
+                    <Stack.Screen name="Myproduct" component={Myproduct} options={{
+                        headerShown: true
+                    }} />
+                </Stack.Navigator>}
         </NavigationContainer>
     );
 }

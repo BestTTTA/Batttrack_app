@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+
 import { BASE_URL } from '@env';
 
 const hookLogin = ({ navigation }) => {
@@ -31,6 +32,7 @@ const hookLogin = ({ navigation }) => {
             }
         } catch (error) {
             showAlert("เข้าสู่ระบบผิดพลาด");
+            console.log(`${BASE_URL}/login/`)
         }
         setIsLoading(false);
     };

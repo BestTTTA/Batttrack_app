@@ -1,217 +1,61 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Image, Button, ActivityIndicator, StyleSheet } from 'react-native';
 import ProgressDialog from 'react-native-progress-dialog';
 import LinearGradient from 'react-native-linear-gradient';
-import hookProductReview from '../hooks/hookProductReview';
-import StylePreviewProduct from '../styles/PreviewProduct';
 import CustomAlert from '../components/Alert';
 import Alertcreatestage from '../components/Alertcreatestage';
+import hookProductReview from '../hooks/hookProductReview';
+import Checklist from "../components/Checklist"
+import { BASE_URL } from '@env';
 
 const Preview = ({ route, navigation }) => {
-    const { product_id, user_id, username } = route.params;
-    const { styles } = StylePreviewProduct();
+    const { product_id } = route.params;
     const [alertVisible, setAlertVisible] = useState(false)
     const [modalVisible, setModalVisible] = useState(false);
+    const { responsePreivew, showPreivew, loading } = hookProductReview();
 
-    const onCloseModal = () => {
-        setModalVisible(false);
-    };
 
-    const {
-        product,
-        isLoading,
-        stage,
-        endtime,
-        isHolding,
-        holdingResponse,
-        handlePress,
-        Endstageemp,
-        endStage
-    } = hookProductReview(product_id, user_id, username);
+    // const onCloseModal = () => {
+    //     setModalVisible(false);
+    // };
 
-    if (!product) {
-        return <ProgressDialog visible={true} loaderColor={"orange"} label={'โปรดรอ'} />
-    }
 
-    const EndEmpandProduct = () => {
-        Endstageemp();
-        endStage();
-    }
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            showPreivew(product_id);
+        }, 1000);
+        return () => clearInterval(intervalId);
+    }, []);
 
-    const hookError = () => {
-        setAlertVisible(false)
-        navigation.navigate("Preview", {
-            user_id: user_id,
-            username: username,
-            product_id: product_id,
-        });
-    }
+    // useEffect(() => {
+    //     showPreivew(product_id);
+    // }, []);
 
-    const mostRecentEmployeeEndTime = product.employees?.[product.employees.length - 1]?.end_time;
+
+    // const renderSubSteps = (subSteps) => {
+    //     return Object.entries(subSteps || {}).map(([key, value]) => (
+    //         <View key={key} style={styles.stepContainer}>
+    //             <Text style={styles.text}>Step: {key}</Text>
+    //             <Text style={styles.text}>Completed: {value.completed ? 'Yes' : 'No'}</Text>
+    //         </View>
+    //     ));
+    // };
 
     return (
-        <>
-            {holdingResponse === "stop" ? (
-                <View style={styles.container}>
-                    <CustomAlert visible={alertVisible} message="การดำเนินงานยังไม่เสร็จสิ้น" onClose={hookError} />
-                    {isLoading ? <ProgressDialog visible={isLoading} loaderColor={"orange"} label={'โปรดรอ'} /> : null}
-                    <View style={styles.containProduct}>
-                        <View style={{
-                            width: '100%',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}>
-                            <Text style={{
-                                fontSize: 50, fontWeight: 'bold', color: 'orange'
-                            }}>{product.product_id}</Text>
-                        </View>
-                        <Text style={styles.text}>เวลาเริ่มงาน: {product.start_time}</Text>
-                        <Text style={styles.text}>เวลาจบงาน: {product.end_time}</Text>
-                        <View style={{ justifyContent: 'space-between', width: '100%', flexDirection: 'row' }}>
-                            <Text style={styles.text}>อยู่ในขั้นตอนที่: {product.current_stage}</Text>
-                            <TouchableOpacity onPress={() => navigation.navigate('PreviewStage', {
-                                stage,
-                                endtime
-                            })}>
-                                <Text style={styles.textstage}>พรีวิวขั้นตอน</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{
-                            width: '100%',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            margin: 6,
-                        }}>
-                            {/* <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'black' }}>พนักงานในโปรดักนี้</Text> */}
-                        </View>
-                        <TouchableOpacity
-                            onPress={() => setModalVisible(true)}
-                            style={styles.containButtoncreatestage}
-                        >
-                            <Text style={styles.customButtonTextRegister}>สร้างขั้นตอน</Text>
-                        </TouchableOpacity>
-
-                        <Alertcreatestage
-                            product_id={product_id}
-                            visible={modalVisible}
-                            onClose={onCloseModal}
-
-                        />
-                        {/* <ScrollView >
-                            {product.employees.map(worker => (
-                                <View style={styles.worker} key={worker.user_id}>
-                                    <Text style={styles.text}>ชื่อ: {worker.name}</Text>
-                                    <Text style={styles.text}>อยู่ในขั้นตอนที่: {worker.current_stage}</Text>
-                                    <Text style={styles.text}>เวลาเริ่มงาน: {worker.start_time}</Text>
-                                    <Text style={styles.text}>เวลาจบงาน: {worker.end_time}</Text>
-                                </View>
-                            ))}
-                        </ScrollView> */}
-                    </View>
-                    {endtime === "..." ? (<View style={styles.containButton}>
-                        <TouchableOpacity
-                            onPress={handlePress}
-                            style={[styles.containButtonholding, {
-                                borderColor: isHolding ? 'red' : '#7A7A7A',
-                                borderWidth: 2,
-                            }]}
-                        >
-                            <Text style={[styles.customButtonTextHolding, { color: isHolding ? 'red' : '#7A7A7A' }]}>
-                                {isHolding ? 'ดำเนินงาน' : 'พักการดำเนินงาน'}
-                            </Text>
-                        </TouchableOpacity>
-                        {mostRecentEmployeeEndTime === "..." ?
-                            (
-                                <TouchableOpacity
-                                    onPress={() => setAlertVisible(true)}
-                                    style={styles.containButtonholding}
-                                >
-                                    <LinearGradient
-                                        start={{ x: 0, y: 0 }}
-                                        end={{ x: 1, y: 0 }}
-                                        colors={['#F5A928', '#F0891B', '#FF7600']}
-                                        style={styles.customButton}
-                                    >
-                                        <Image
-                                            source={require('../../assets/timer.png')}
-                                            style={{ width: 20, height: 20, marginLeft: 5 }}
-                                        />
-                                    </LinearGradient>
-                                </TouchableOpacity>
-                            ) : (
-                                <TouchableOpacity
-                                    onPress={() => navigation.navigate("Nextstage", {
-                                        user_id: user_id,
-                                        username: username,
-                                        product_id: product_id,
-                                    })}
-                                    style={styles.containButtonholding}
-                                >
-                                    <LinearGradient
-                                        start={{ x: 0, y: 0 }}
-                                        end={{ x: 1, y: 0 }}
-                                        colors={['#F5A928', '#F0891B', '#FF7600']}
-                                        style={styles.customButton}
-                                    >
-                                        <Image
-                                            source={require('../../assets/iconempwhite.png')}
-                                            style={{ width: 20, height: 20, marginLeft: 5 }}
-                                        />
-                                    </LinearGradient>
-                                </TouchableOpacity>
-                            )}
-
-                    </View>) : (<View></View>)}
-                    {endtime === "..." ? (<View style={styles.containButton}>
-                        <TouchableOpacity
-                            onPress={Endstageemp}
-                            style={styles.containButtonregister}
-                        >
-                            <Text style={styles.customButtonTextRegister}>จบขั้นตอน</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            onPress={EndEmpandProduct}
-                            style={styles.ButtonLogin}
-                        >
-                            <LinearGradient
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 0 }}
-                                colors={['#F5A928', '#F0891B', '#FF7600']}
-                                style={styles.customButton}
-                            >
-                                <Text style={styles.customButtonText}>ปิดโปรดัก</Text>
-                                {/* <Image
-                                    source={require('../../assets/arrowwhite.png')}
-                                    style={{ width: 20, height: 20, marginLeft: 5 }}
-                                /> */}
-                            </LinearGradient>
-                        </TouchableOpacity>
-                    </View>) : (<View></View>)
-                    }
-                </View>) : (
-                <View style={styles.container}>
-                    {isLoading ?
-                        <ProgressDialog visible={isLoading} loaderColor={"orange"} label={'Please wait'} /> : null}
-                    <View style={styles.containHolding}>
-                        <Image
-                            source={require('../../assets/timeclock.png')}
-                            style={{ width: 300, height: 300, margin: 20, }}
-                        />
-                    </View>
-                    {holdingResponse === "holding" ? (<View style={styles.containButton}>
-                        <TouchableOpacity
-                            onPress={handlePress}
-                            style={styles.containButtonholding}
-                        >
-                            <Text style={[styles.customButtonTextHolding, { color: holdingResponse === "holding" ? 'red' : '#7A7A7A' }]}>
-                                {holdingResponse === "holding" ? 'ดำเนินงานต่อ' : 'พักการดำเนินงาน'}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>) : (<View></View>)}
-                </View>)
-            }
-        </>
+        <View style={styles.containerTwo}>
+            <ScrollView style={styles.container}>
+                <Text style={styles.textID}>PROJECT ID: {responsePreivew.id_step}</Text>
+                <Text style={styles.text}>START: {responsePreivew.time_start}</Text>
+                <Text style={styles.text}>END: {responsePreivew.time_end}</Text>
+                <View style={styles.customUnderline}></View>
+                {/* {responsePreivew.sub_steps1 ? renderSubSteps(responsePreivew.sub_steps1) : null} */}
+                <Checklist subs={responsePreivew.sub_steps1} endpoint="steps1" headname="ประกอบแบตLTO" />
+                <Checklist subs={responsePreivew.sub_steps2} endpoint="steps2" headname="ประกอบกล่อง Con trol" />
+                <Checklist subs={responsePreivew.sub_steps3} endpoint="steps3" headname="ประกอบแบตไฟเลี้ยงพัดลม" />
+                <Checklist subs={responsePreivew.sub_steps4} endpoint="steps4" headname="ประกอบแรค" />
+                <Checklist subs={responsePreivew.sub_steps5} endpoint="steps5" headname="ทดสอบ" />
+            </ScrollView>
+        </View>
     );
 };
 
@@ -219,3 +63,92 @@ export default Preview;
 
 
 
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: 'white',
+        padding: 10,
+        height: '100%',
+        borderRadius: 20,
+        // overflow: "hidden"
+    },
+    containerTwo: {
+        flex: 1,
+        height: '100%',
+        padding: 10,
+        backgroundColor: '#ff6600',
+    },
+    text: {
+        color: 'black',
+        margin: 2,
+        fontWeight: 'bold',
+        fontSize: 10,
+    },
+    textID: {
+        color: 'orange',
+        margin: 5,
+        fontWeight: 'bold',
+        fontSize: 20,
+    },
+    containButtoncreatestage: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderColor: '#ff6600',
+        backgroundColor: 'white',
+        borderWidth: 2,
+        borderRadius: 30,
+        height: 40,
+        shadowColor: 'rgba(0, 0, 0, 0.8)',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 4,
+        elevation: 6,
+    },
+    containButtonholding: {
+        width: '50%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+        borderRadius: 30,
+        height: 40,
+        shadowColor: 'rgba(0, 0, 0, 0.8)',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 4,
+        elevation: 6,
+        margin: 5,
+    },
+    customButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    customButtonTextRegister: {
+        color: '#ff6600',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    customButtonTextHolding: {
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    customButton: {
+        backgroundColor: 'orange',
+        padding: 10,
+        borderRadius: 30,
+        width: '100%',
+        shadowColor: 'rgba(0, 0, 0, 0.8)',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 4,
+        elevation: 6,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    customUnderline: {
+        width: "100%",
+        height: 2,
+        backgroundColor: 'orange',
+    }
+});
