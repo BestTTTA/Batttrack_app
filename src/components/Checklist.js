@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, ScrollView, TouchableOpacity, Image, Pressable } from 'react-native';
 import axios from 'axios';
-
+import moment from 'moment';
+import CustomAlert from "./Alert"
+import CustomAlert2Way from "./Alert2Way"
 
 import { BASE_URL } from '@env';
+import tw from 'twrnc';
 
-function Checklist({ subs, endpoint, headname }) {
+function Checklist({ subs, endpoint, headname, product_id }) {
   const [selectedSteps, setSelectedSteps] = useState([]);
+  const currentDateTimeThailand = moment().format('DD-MM-YYYY HH:mm:ss');
+
 
   const handleSelectStep = (stepName) => {
     if (selectedSteps.includes(stepName)) {
@@ -16,27 +21,138 @@ function Checklist({ subs, endpoint, headname }) {
     }
   };
 
+  const handleSubmit = async () => {
+    const updateStepsData = {
+      steps_to_update: selectedSteps,
+    };
+    try {
+      const response = await axios.put(`${BASE_URL}/${endpoint}/${product_id}`, updateStepsData);
+      console.log(`${BASE_URL}/${endpoint}/${product_id}`)
+      console.log("handleSumit", endpoint)
+    } catch (error) {
+      console.error('Failed to update steps:', error);
+      console.log(`${BASE_URL}/${endpoint}/${product_id}`)
+    }
+  };
+
   const handleSubmitend = async () => {
     const updateStepsData = {
       steps_to_update: selectedSteps,
     };
     try {
-      const response = await axios.put(`${BASE_URL}/${endpoint}/projectLTO`, updateStepsData);
-      const responseend = await axios.put(`${BASE_URL}/update_end/projectLTO/testnewend`);
-      alert('Steps updated successfully!');
-      console.log(`${BASE_URL}/updateSteps`)
+      const response = await axios.put(`${BASE_URL}/update_end/${product_id}/${currentDateTimeThailand}`, updateStepsData);
+      console.log(`${BASE_URL}/update_end/${product_id}/${currentDateTimeThailand}`)
+    } catch (error) {
+      console.error('Failed to update steps end:', error);
+      console.log(`${BASE_URL}/update_end/${product_id}/${currentDateTimeThailand}`)
+    }
+  };
+
+
+  const handleSubmitstart = async () => {
+    setsAlertVisible(true);
+    const updateStepsData = {
+      steps_to_update: selectedSteps,
+    };
+    try {
+      const response = await axios.put(`${BASE_URL}/update_start/${product_id}/${currentDateTimeThailand}`, updateStepsData);
+      console.log(`${BASE_URL}/update_start/${product_id}/testnewend`)
     } catch (error) {
       console.error('Failed to update steps:', error);
-      alert('Failed to update steps');
-      console.log(`${BASE_URL}/updateSteps`)
+      console.log(`${BASE_URL}/update_start/${product_id}/testnewend`)
+    }
+  };
+
+  const Both = async () => {
+    if (selectedSteps.length === 0) {
+      console.log("No steps selected.");
+      return;
+    }
+    const lastSelectedStepName = selectedSteps[selectedSteps.length - 1];
+    const lastSelectedStepDetail = subs[lastSelectedStepName];
+    if (lastSelectedStepDetail.time_start == "...") {
+      console.log("time", lastSelectedStepDetail.time_start)
+      showAlertend();
+    } else {
+      console.log("time", lastSelectedStepDetail.time_start)
+      // console.log("log from Both:", lastSelectedStepName);
+      setsAlertVisibleend(true);
     }
   };
 
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
+  const [addon, setAddon] = useState(0)
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setAddon((currentAddon) => (currentAddon === 100 ? 50 : 100));
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const [alertVisible, setAlertVisible] = useState(false);
+  const showAlert = () => setAlertVisible(true);
+  const onClose = () => setAlertVisible(false);
+
+  const [alertVisibleend, setAlertVisibleend] = useState(false);
+  const showAlertend = () => setAlertVisibleend(true);
+  const onCloseend = () => setAlertVisibleend(false);
+
+
+  const [isAlertVisible, setsAlertVisible] = useState(false);
+  const handleClose = () => setAlertVisible(false);
+  const handleContinue = () => {
+    console.log("Continued");
+    handleSubmitstart();
+    setsAlertVisible(false);
+  };
+  const handleCancel = () => {
+    console.log("Cancelled");
+    setAlertVisible(false);
+  };
+
+
+  const [isAlertVisibleend, setsAlertVisibleend] = useState(false);
+  const handleCloseend = () => setsAlertVisibleend(false);
+  const handleContinueend = async () => {
+    console.log("Continued");
+    await handleSubmitend();
+    await handleSubmit();
+    setsAlertVisibleend(false);
+  };
+  const handleCancelend = () => {
+    console.log("Cancelled");
+    setsAlertVisibleend(false);
+  };
+
 
   return (
     <View style={styles.container}>
+      <CustomAlert
+        visible={alertVisibleend}
+        message="โปรดเริ่มงานนี้ก่อน!"
+        onClose={onCloseend}
+      />
+      <CustomAlert
+        visible={alertVisible}
+        message="กำลังดำเนินการ"
+        onClose={onClose}
+      />
+      <CustomAlert2Way
+        visible={isAlertVisible}
+        message="เริ่มงานตามขั้นตอนที่กำหนด?"
+        onClose={handleClose} // Can be used to close the alert when the back button is pressed or modal is dismissed
+        onContinue={handleContinue}
+        onCancel={handleCancel}
+      />
+      <CustomAlert2Way
+        visible={isAlertVisibleend}
+        message="จบงานที่กำหนด?"
+        onClose={handleCloseend} // Can be used to close the alert when the back button is pressed or modal is dismissed
+        onContinue={handleContinueend}
+        onCancel={handleCancelend}
+      />
       <TouchableOpacity
         onPress={() => setDropdownVisible(!dropdownVisible)}
         style={styles.dropdownHeader}
@@ -62,23 +178,26 @@ function Checklist({ subs, endpoint, headname }) {
                   handleSelectStep(stepName);
                 }}
               >
-                <Text
-                  style={{
-                    textDecorationLine: selectedSteps.includes(stepName) ? 'line-through' : 'none',
-                    color: selectedSteps.includes(stepName) ? 'red' : 'black',
-                  }}
-                >
-                  {stepName}
-                </Text>
+                <View style={tw`flex flex-row items-center`}>
+                  <Text
+                    style={{
+                      textDecorationLine: selectedSteps.includes(stepName) ? 'line-through' : 'none',
+                      color: selectedSteps.includes(stepName) ? 'red' : 'black',
+                    }}
+                  >
+                    {stepName}
+                  </Text>
+                  {stepDetails.time_start === "..." ? null : (<TouchableOpacity onPress={showAlert} style={tw` m-2 h-[15px] w-[15px] rounded-full bg-yellow-400 opacity-${addon}`}></TouchableOpacity>)}
+                </View>
               </TouchableOpacity>
             ) : null
           ))}
           <View style={styles.containbutton}>
-            <TouchableOpacity style={styles.button} onPress={handleSubmitend}>
-              <Text style={styles.text}>จบงาน</Text>
+            <TouchableOpacity style={tw` w-[120px] h-[40px] bg-black items-center justify-center m-2 rounded`} onPress={Both}>
+              <Text style={tw`text-white`}>จบงาน</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.text}>เริ่มงาน</Text>
+            <TouchableOpacity style={tw` w-[120px] h-[40px] bg-black items-center justify-center m-2 rounded`} onPress={handleSubmitstart}>
+              <Text style={tw`text-white`}>เริ่มงาน</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -97,7 +216,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center'
   },
-  
+
   listItem: {
     padding: 10,
     marginVertical: 5,

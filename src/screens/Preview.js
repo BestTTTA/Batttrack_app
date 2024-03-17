@@ -7,6 +7,7 @@ import Alertcreatestage from '../components/Alertcreatestage';
 import hookProductReview from '../hooks/hookProductReview';
 import Checklist from "../components/Checklist"
 import { BASE_URL } from '@env';
+import tw from 'twrnc';
 
 const Preview = ({ route, navigation }) => {
     const { product_id } = route.params;
@@ -49,11 +50,11 @@ const Preview = ({ route, navigation }) => {
                 <Text style={styles.text}>END: {responsePreivew.time_end}</Text>
                 <View style={styles.customUnderline}></View>
                 {/* {responsePreivew.sub_steps1 ? renderSubSteps(responsePreivew.sub_steps1) : null} */}
-                <Checklist subs={responsePreivew.sub_steps1} endpoint="steps1" headname="ประกอบแบตLTO" />
-                <Checklist subs={responsePreivew.sub_steps2} endpoint="steps2" headname="ประกอบกล่อง Con trol" />
-                <Checklist subs={responsePreivew.sub_steps3} endpoint="steps3" headname="ประกอบแบตไฟเลี้ยงพัดลม" />
-                <Checklist subs={responsePreivew.sub_steps4} endpoint="steps4" headname="ประกอบแรค" />
-                <Checklist subs={responsePreivew.sub_steps5} endpoint="steps5" headname="ทดสอบ" />
+                <Checklist subs={responsePreivew.sub_steps1} endpoint="steps1" headname="ประกอบแบตLTO" product_id={product_id}/>
+                <Checklist subs={responsePreivew.sub_steps2} endpoint="steps2" headname="ประกอบกล่อง Con trol" product_id={product_id}/>
+                <Checklist subs={responsePreivew.sub_steps3} endpoint="steps3" headname="ประกอบแบตไฟเลี้ยงพัดลม" product_id={product_id}/>
+                <Checklist subs={responsePreivew.sub_steps4} endpoint="steps4" headname="ประกอบแรค" product_id={product_id}/>
+                <Checklist subs={responsePreivew.sub_steps5} endpoint="steps5" headname="ทดสอบ" product_id={product_id}/>
             </ScrollView>
         </View>
     );

@@ -23,14 +23,16 @@ const hookRegister = (navigation) => {
         setIsLoading(true);
         try {
             const response = await axios.post(`${BASE_URL}/register/`, {
-                username,
-                password
+                username: username,
+                password: password
             });
             if (response.status === 200) {
                 navigation.navigate('Login');
             }
         } catch (error) {
             showAlert("ชื่อนี้มีการใช้งานอยู่แล้ว");
+            console.log("error register", error)
+            console.log(`${BASE_URL}/register/`)
         }
         setIsLoading(false);
     };
