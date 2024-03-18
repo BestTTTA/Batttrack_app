@@ -1,24 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, Button, ActivityIndicator, StyleSheet } from 'react-native';
-import ProgressDialog from 'react-native-progress-dialog';
-import LinearGradient from 'react-native-linear-gradient';
-import CustomAlert from '../components/Alert';
-import Alertcreatestage from '../components/Alertcreatestage';
-import hookProductReview from '../hooks/hookProductReview';
 import Checklist from "../components/Checklist"
 import { BASE_URL } from '@env';
 import tw from 'twrnc';
+import axios from 'axios';
 
-const Preview = ({ route, navigation }) => {
-    const { product_id } = route.params;
+const Preview = ({ navigation, route }) => {
+    const { product_id, username } = route.params;
     const [alertVisible, setAlertVisible] = useState(false)
     const [modalVisible, setModalVisible] = useState(false);
-    const { responsePreivew, showPreivew, loading } = hookProductReview();
+    const [responsePreivew, setResponsepreview] = useState("")
 
-
-    // const onCloseModal = () => {
-    //     setModalVisible(false);
-    // };
+    const [loading, setLoding] = useState(false)
+    const showPreivew = async (product_id) => {
+        setLoding(true)
+        try {
+            const response = await axios.get(`${BASE_URL}/step_lto/${product_id}`)
+            setResponsepreview(response.data)
+        } catch (error) {
+            console.log("showPreivew Error", error)
+            console.log("show preview", product_id)
+        }
+        setLoding(false)
+    }
 
 
     useEffect(() => {
@@ -50,11 +54,26 @@ const Preview = ({ route, navigation }) => {
                 <Text style={styles.text}>END: {responsePreivew.time_end}</Text>
                 <View style={styles.customUnderline}></View>
                 {/* {responsePreivew.sub_steps1 ? renderSubSteps(responsePreivew.sub_steps1) : null} */}
-                <Checklist subs={responsePreivew.sub_steps1} endpoint="steps1" headname="ประกอบแบตLTO" product_id={product_id}/>
-                <Checklist subs={responsePreivew.sub_steps2} endpoint="steps2" headname="ประกอบกล่อง Con trol" product_id={product_id}/>
-                <Checklist subs={responsePreivew.sub_steps3} endpoint="steps3" headname="ประกอบแบตไฟเลี้ยงพัดลม" product_id={product_id}/>
-                <Checklist subs={responsePreivew.sub_steps4} endpoint="steps4" headname="ประกอบแรค" product_id={product_id}/>
-                <Checklist subs={responsePreivew.sub_steps5} endpoint="steps5" headname="ทดสอบ" product_id={product_id}/>
+                <Checklist subs={responsePreivew.sub_steps1} endpoint="steps1" headname="ประกอบแบตLTO" product_id={product_id} user={{
+                    username: username,
+                    
+                }} />
+                <Checklist subs={responsePreivew.sub_steps2} endpoint="steps2" headname="ประกอบกล่อง Con trol" product_id={product_id} user={{
+                    username: username,
+                    
+                }} />
+                <Checklist subs={responsePreivew.sub_steps3} endpoint="steps3" headname="ประกอบแบตไฟเลี้ยงพัดลม" product_id={product_id} user={{
+                    username: username,
+                    
+                }} />
+                <Checklist subs={responsePreivew.sub_steps4} endpoint="steps4" headname="ประกอบแรค" product_id={product_id} user={{
+                    username: username,
+                    
+                }} />
+                <Checklist subs={responsePreivew.sub_steps5} endpoint="steps5" headname="ทดสอบ" product_id={product_id} user={{
+                    username: username,
+                    
+                }} />
             </ScrollView>
         </View>
     );

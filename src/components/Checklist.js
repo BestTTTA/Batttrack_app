@@ -8,7 +8,7 @@ import CustomAlert2Way from "./Alert2Way"
 import { BASE_URL } from '@env';
 import tw from 'twrnc';
 
-function Checklist({ subs, endpoint, headname, product_id }) {
+function Checklist({ subs, endpoint, headname, product_id, user }) {
   const [selectedSteps, setSelectedSteps] = useState([]);
   const currentDateTimeThailand = moment().format('DD-MM-YYYY HH:mm:ss');
 
@@ -45,21 +45,6 @@ function Checklist({ subs, endpoint, headname, product_id }) {
     } catch (error) {
       console.error('Failed to update steps end:', error);
       console.log(`${BASE_URL}/update_end/${product_id}/${currentDateTimeThailand}`)
-    }
-  };
-
-
-  const handleSubmitstart = async () => {
-    setsAlertVisible(true);
-    const updateStepsData = {
-      steps_to_update: selectedSteps,
-    };
-    try {
-      const response = await axios.put(`${BASE_URL}/update_start/${product_id}/${currentDateTimeThailand}`, updateStepsData);
-      console.log(`${BASE_URL}/update_start/${product_id}/testnewend`)
-    } catch (error) {
-      console.error('Failed to update steps:', error);
-      console.log(`${BASE_URL}/update_start/${product_id}/testnewend`)
     }
   };
 
@@ -100,16 +85,40 @@ function Checklist({ subs, endpoint, headname, product_id }) {
   const onCloseend = () => setAlertVisibleend(false);
 
 
+
+  const handleSubmitstart = async () => {
+    setsAlertVisible(true);
+  };
+
+  const Updatename = async () => {
+    try {
+      const reponse = await axios.post(`${BASE_URL}/update_name/${user.username}`)
+    } catch (error) {
+      console.log("Update name error", error)
+      console.log(`${BASE_URL}/update_name/${user.username}`)
+    }
+  }
+
   const [isAlertVisible, setsAlertVisible] = useState(false);
   const handleClose = () => setAlertVisible(false);
-  const handleContinue = () => {
+  const handleContinue = async () => {
     console.log("Continued");
-    handleSubmitstart();
+    const updateStepsData = {
+      steps_to_update: selectedSteps,
+    };
+    try {
+      const response = await axios.put(`${BASE_URL}/update_start/${product_id}/${currentDateTimeThailand}`, updateStepsData);
+      console.log(`${BASE_URL}/update_start/${product_id}/testnewend`)
+    } catch (error) {
+      console.error('Failed to update steps:', error);
+      console.log(`${BASE_URL}/update_start/${product_id}/testnewend`)
+    }
+    await Updatename();
     setsAlertVisible(false);
   };
   const handleCancel = () => {
     console.log("Cancelled");
-    setAlertVisible(false);
+    setsAlertVisible(false);
   };
 
 
@@ -193,10 +202,10 @@ function Checklist({ subs, endpoint, headname, product_id }) {
             ) : null
           ))}
           <View style={styles.containbutton}>
-            <TouchableOpacity style={tw` w-[120px] h-[40px] bg-black items-center justify-center m-2 rounded`} onPress={Both}>
-              <Text style={tw`text-white`}>จบงาน</Text>
+            <TouchableOpacity style={tw`border-2 border-orange-400 w-[120px] h-[40px] items-center justify-center m-2 rounded `} onPress={Both}>
+              <Text style={tw`text-white text-orange-500`}>จบงาน</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={tw` w-[120px] h-[40px] bg-black items-center justify-center m-2 rounded`} onPress={handleSubmitstart}>
+            <TouchableOpacity style={tw` w-[120px] h-[40px] bg-orange-400 items-center justify-center m-2 rounded`} onPress={handleSubmitstart}>
               <Text style={tw`text-white`}>เริ่มงาน</Text>
             </TouchableOpacity>
           </View>

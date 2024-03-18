@@ -13,11 +13,10 @@ const Options = ({ route, navigation }) => {
             </View>
             <View style={styles.containoptions}>
                 <View style={styles.optionsname}>
-                    <Text style={{ color: "gray", fontWeight: 'bold' }}>ทางเลือก</Text>
+                    <Text style={{ color: "gray", fontWeight: 'bold' }}>{username}</Text>
                 </View>
                 <TouchableOpacity style={styles.optionsall} onPress={() => navigation.navigate("Qrcode", {
-                    user_id,
-                    username,
+                    username: username,
                 })}>
                     <View style={styles.containbox}>
                         <Image

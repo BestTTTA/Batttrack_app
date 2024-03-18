@@ -30,6 +30,7 @@ const hookLogin = ({ navigation }) => {
                     username: response.data.username
                 });
             }
+            console.log("login", response.data.username)
         } catch (error) {
             showAlert("เข้าสู่ระบบผิดพลาด");
             console.log(`${BASE_URL}/login/`)
