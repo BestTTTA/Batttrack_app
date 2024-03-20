@@ -61,12 +61,15 @@ const PreviewStage = ({ route }) => {
                                     <Text style={tw`text-black`}>ขั้นตอน: {key}</Text>
                                     <Text style={tw`text-black`}>สถานะ: กำลังดำเนินการ</Text>
                                     {value.name && <Text style={tw`text-black`}>ชื่อผู้ทำ: {value.name}</Text>}
+                                    {value.name && <Text style={tw`text-black`}>เวลาที่เริ่ม: {value.time_start}</Text>}
                                 </View>
                             ) : (
                                 <View style={tw`flex-1 ml-2`}>
                                     <Text style={tw`text-black`}>ขั้นตอน: {key}</Text>
                                     <Text style={tw`text-black`}>สถานะ: ดำเนินการเสร็จสิ้น</Text>
                                     {value.name && <Text style={tw`text-black`}>ชื่อผู้ทำ: {value.name}</Text>}
+                                    {value.name && <Text style={tw`text-black`}>เวลาที่เริ่ม: {value.time_start}</Text>}
+                                    {value.name && <Text style={tw`text-black`}>เวลาที่จบ: {value.time_end}</Text>}
                                 </View>
                             )}
                         </View>

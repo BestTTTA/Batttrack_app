@@ -77,7 +77,7 @@ const Preview = ({ navigation, route }) => {
                     navigation.navigate("PreviewStage", { product_id: product_id });
                 }}
                 >
-                    <Text style={tw`text-black font-bold text-[15px] underline`}>พรีวิว ขั้นตอนสำหรับ project นี้</Text>
+                    <Text style={tw`text-black text-[15px] underline`}>พรีวิว ขั้นตอนสำหรับ project นี้</Text>
                 </TouchableOpacity>
             </View>
         </View>
