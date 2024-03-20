@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, Button, ActivityIndicator, StyleSheet } from 'react-native';
-import Checklist from "../components/Checklist"
+import Checklist from "../components/Checklist";
 import { BASE_URL } from '@env';
 import tw from 'twrnc';
 import axios from 'axios';
+import ProgressDialog from 'react-native-progress-dialog';
 
 const Preview = ({ navigation, route }) => {
     const { product_id, username } = route.params;
-    const [alertVisible, setAlertVisible] = useState(false)
-    const [modalVisible, setModalVisible] = useState(false);
     const [responsePreivew, setResponsepreview] = useState("")
 
     const [loading, setLoding] = useState(false)
@@ -24,7 +23,6 @@ const Preview = ({ navigation, route }) => {
         setLoding(false)
     }
 
-
     useEffect(() => {
         const intervalId = setInterval(() => {
             showPreivew(product_id);
@@ -36,7 +34,6 @@ const Preview = ({ navigation, route }) => {
     //     showPreivew(product_id);
     // }, []);
 
-
     // const renderSubSteps = (subSteps) => {
     //     return Object.entries(subSteps || {}).map(([key, value]) => (
     //         <View key={key} style={styles.stepContainer}>
@@ -47,42 +44,47 @@ const Preview = ({ navigation, route }) => {
     // };
 
     return (
-        <View style={styles.containerTwo}>
-            <ScrollView style={styles.container}>
-                <Text style={styles.textID}>PROJECT ID: {responsePreivew.id_step}</Text>
-                <Text style={styles.text}>START: {responsePreivew.time_start}</Text>
-                <Text style={styles.text}>END: {responsePreivew.time_end}</Text>
-                <View style={styles.customUnderline}></View>
-                {/* {responsePreivew.sub_steps1 ? renderSubSteps(responsePreivew.sub_steps1) : null} */}
-                <Checklist subs={responsePreivew.sub_steps1} endpoint="steps1" headname="ประกอบแบตLTO" product_id={product_id} user={{
-                    username: username,
-                    
-                }} />
-                <Checklist subs={responsePreivew.sub_steps2} endpoint="steps2" headname="ประกอบกล่อง Con trol" product_id={product_id} user={{
-                    username: username,
-                    
-                }} />
-                <Checklist subs={responsePreivew.sub_steps3} endpoint="steps3" headname="ประกอบแบตไฟเลี้ยงพัดลม" product_id={product_id} user={{
-                    username: username,
-                    
-                }} />
-                <Checklist subs={responsePreivew.sub_steps4} endpoint="steps4" headname="ประกอบแรค" product_id={product_id} user={{
-                    username: username,
-                    
-                }} />
-                <Checklist subs={responsePreivew.sub_steps5} endpoint="steps5" headname="ทดสอบ" product_id={product_id} user={{
-                    username: username,
-                    
-                }} />
-            </ScrollView>
+        <View style={tw`flex h-full flex-col justify-between bg-orange-600 p-4`}>
+            <View style={tw`bg-white h-full rounded-xl p-2`}>
+                <ScrollView style={tw`bg-white`}>
+                    <Text style={styles.textID}>PROJECT ID: {responsePreivew.id_step}</Text>
+                    <Text style={styles.text}>START: {responsePreivew.time_start}</Text>
+                    <Text style={styles.text}>END: {responsePreivew.time_end}</Text>
+                    <View style={styles.customUnderline}></View>
+                    {/* {responsePreivew.sub_steps1 ? renderSubSteps(responsePreivew.sub_steps1) : null} */}
+                    <Checklist subs={responsePreivew.sub_steps1} endpoint="steps1" headname="ประกอบแบตLTO" product_id={product_id} user={{
+                        username: username,
+
+                    }} sub_steps="sub_steps1" />
+                    <Checklist subs={responsePreivew.sub_steps2} endpoint="steps2" headname="ประกอบกล่อง Con trol" product_id={product_id} user={{
+                        username: username,
+
+                    }} sub_steps="sub_steps2" />
+                    <Checklist subs={responsePreivew.sub_steps3} endpoint="steps3" headname="ประกอบแบตไฟเลี้ยงพัดลม" product_id={product_id} user={{
+                        username: username,
+
+                    }} sub_steps="sub_steps3" />
+                    <Checklist subs={responsePreivew.sub_steps4} endpoint="steps4" headname="ประกอบแรค" product_id={product_id} user={{
+                        username: username,
+
+                    }} sub_steps="sub_steps4" />
+                    <Checklist subs={responsePreivew.sub_steps5} endpoint="steps5" headname="ทดสอบ" product_id={product_id} user={{
+                        username: username,
+
+                    }} sub_steps="sub_steps5" />
+                </ScrollView>
+                <TouchableOpacity style={tw`flex justify-center items-center h-[50px] rounded-full`} onPress={() => {
+                    navigation.navigate("PreviewStage", { product_id: product_id });
+                }}
+                >
+                    <Text style={tw`text-black font-bold text-[15px] underline`}>พรีวิว ขั้นตอนสำหรับ project นี้</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
 
 export default Preview;
-
-
-
 const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',

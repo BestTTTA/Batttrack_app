@@ -60,7 +60,7 @@ const Options = ({ route, navigation }) => {
                         </TouchableOpacity>
                     </>
                 ) : <>
-                    <TouchableOpacity style={styles.optionsall} onPress={() => navigation.navigate("Myproduct", {
+                    {/* <TouchableOpacity style={styles.optionsall} onPress={() => navigation.navigate("Myproduct", {
                         user_id: user_id
                     })}>
                         <View style={styles.containbox}>
@@ -74,7 +74,7 @@ const Options = ({ route, navigation }) => {
                             source={require('../../assets/right-arrow.png')}
                             style={{ width: 20, height: 20 }}
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </>}
 
             </View>

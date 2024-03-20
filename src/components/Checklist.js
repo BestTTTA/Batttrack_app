@@ -4,11 +4,13 @@ import axios from 'axios';
 import moment from 'moment';
 import CustomAlert from "./Alert"
 import CustomAlert2Way from "./Alert2Way"
+import ProgressDialog from 'react-native-progress-dialog';
+
 
 import { BASE_URL } from '@env';
 import tw from 'twrnc';
 
-function Checklist({ subs, endpoint, headname, product_id, user }) {
+function Checklist({ subs, endpoint, headname, product_id, user, sub_steps }) {
   const [selectedSteps, setSelectedSteps] = useState([]);
   const currentDateTimeThailand = moment().format('DD-MM-YYYY HH:mm:ss');
 
@@ -20,6 +22,8 @@ function Checklist({ subs, endpoint, headname, product_id, user }) {
       setSelectedSteps([...selectedSteps, stepName]);
     }
   };
+
+
 
   const handleSubmit = async () => {
     const updateStepsData = {
@@ -39,13 +43,15 @@ function Checklist({ subs, endpoint, headname, product_id, user }) {
     const updateStepsData = {
       steps_to_update: selectedSteps,
     };
+    setLoding(true);
     try {
-      const response = await axios.put(`${BASE_URL}/update_end/${product_id}/${currentDateTimeThailand}`, updateStepsData);
-      console.log(`${BASE_URL}/update_end/${product_id}/${currentDateTimeThailand}`)
+      const response = await axios.put(`${BASE_URL}/update_end/${sub_steps}/${product_id}/${currentDateTimeThailand}`, updateStepsData);
+      console.log(`${BASE_URL}/update_end/${sub_steps}/${product_id}/${currentDateTimeThailand}`)
     } catch (error) {
       console.error('Failed to update steps end:', error);
-      console.log(`${BASE_URL}/update_end/${product_id}/${currentDateTimeThailand}`)
+      console.log(`${BASE_URL}/update_end/${sub_steps}/${product_id}/${currentDateTimeThailand}`)
     }
+    setLoding(false);
   };
 
   const Both = async () => {
@@ -90,31 +96,42 @@ function Checklist({ subs, endpoint, headname, product_id, user }) {
     setsAlertVisible(true);
   };
 
+
   const Updatename = async () => {
+    const updateStepsData = {
+      steps_to_update: selectedSteps
+    };
     try {
-      const reponse = await axios.post(`${BASE_URL}/update_name/${user.username}`)
+      const reponse = await axios.put(`${BASE_URL}/udpate_name/${sub_steps}/${product_id}/${user.username}`, updateStepsData)
+      // console.log("error update_name",`${BASE_URL}/udpate_name/${sub_steps}/${product_id}/${user.username}`, updateStepsData)
+      console.log("update name", sub_steps)
     } catch (error) {
       console.log("Update name error", error)
-      console.log(`${BASE_URL}/update_name/${user.username}`)
+      // console.log("error update_name",`${BASE_URL}/udpate_name/${sub_steps}/${product_id}/${user.username}`, updateStepsData)
     }
   }
 
+
   const [isAlertVisible, setsAlertVisible] = useState(false);
   const handleClose = () => setAlertVisible(false);
+  const [loading, setLoding] = useState(false)
+
   const handleContinue = async () => {
     console.log("Continued");
     const updateStepsData = {
       steps_to_update: selectedSteps,
     };
+    setLoding(true);
     try {
-      const response = await axios.put(`${BASE_URL}/update_start/${product_id}/${currentDateTimeThailand}`, updateStepsData);
-      console.log(`${BASE_URL}/update_start/${product_id}/testnewend`)
+      const response = await axios.put(`${BASE_URL}/update_start/${sub_steps}/${product_id}/${currentDateTimeThailand}`, updateStepsData);
+      console.log(`${BASE_URL}/update_start/${sub_steps}/${product_id}/${currentDateTimeThailand}`, updateStepsData)
     } catch (error) {
       console.error('Failed to update steps:', error);
-      console.log(`${BASE_URL}/update_start/${product_id}/testnewend`)
+      console.log(`${BASE_URL}/update_start/${sub_steps}/${product_id}/${currentDateTimeThailand}`)
     }
     await Updatename();
     setsAlertVisible(false);
+    setLoding(false);
   };
   const handleCancel = () => {
     console.log("Cancelled");
@@ -138,6 +155,7 @@ function Checklist({ subs, endpoint, headname, product_id, user }) {
 
   return (
     <View style={styles.container}>
+      {loading ? <ProgressDialog visible={loading} loaderColor={"orange"} label={'โปรดรอ'} /> : null}
       <CustomAlert
         visible={alertVisibleend}
         message="โปรดเริ่มงานนี้ก่อน!"
@@ -202,10 +220,10 @@ function Checklist({ subs, endpoint, headname, product_id, user }) {
             ) : null
           ))}
           <View style={styles.containbutton}>
-            <TouchableOpacity style={tw`border-2 border-orange-400 w-[120px] h-[40px] items-center justify-center m-2 rounded `} onPress={Both}>
+            <TouchableOpacity style={tw`border-2 border-orange-400 w-[120px] h-[40px] items-center justify-center m-2 rounded shadow-lg bg-white`} onPress={Both}>
               <Text style={tw`text-white text-orange-500`}>จบงาน</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={tw` w-[120px] h-[40px] bg-orange-400 items-center justify-center m-2 rounded`} onPress={handleSubmitstart}>
+            <TouchableOpacity style={tw` w-[120px] h-[40px] bg-orange-400 items-center justify-center m-2 rounded shadow-lg`} onPress={handleSubmitstart}>
               <Text style={tw`text-white`}>เริ่มงาน</Text>
             </TouchableOpacity>
           </View>
